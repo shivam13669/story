@@ -219,6 +219,8 @@ const AdminDashboard = () => {
             { id: "users", label: "Travelers", icon: Users },
             { id: "bookings", label: "Bookings", icon: Briefcase },
             { id: "reviews", label: "Testimonials", icon: FileText },
+            { id: "coupons", label: "Coupons", icon: Briefcase },
+            { id: "revenue", label: "Revenue", icon: DollarSign },
             { id: "settings", label: "Settings", icon: Settings },
           ].map((item) => {
             const Icon = item.icon;

@@ -37,6 +37,7 @@ const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeNav, setActiveNav] = useState("overview");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   // Redirect if not authenticated or if admin (admin should go to admin dashboard)

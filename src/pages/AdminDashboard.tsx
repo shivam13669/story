@@ -325,7 +325,7 @@ const AdminDashboard = () => {
             <div className="flex items-center justify-center h-96">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
-          ) : (
+          ) : activeNav === "overview" ? (
             <>
               {/* Statistics Cards Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
@@ -509,7 +509,26 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
             </>
-          )}
+          ) : activeNav === "users" ? (
+            <AdminUsersView users={users} onDataChange={loadData} />
+          ) : activeNav === "bookings" ? (
+            <AdminBookingsView bookings={bookings} users={users} />
+          ) : activeNav === "reviews" ? (
+            <AdminTestimonialsView testimonials={testimonials} onDataChange={loadData} />
+          ) : activeNav === "settings" ? (
+            <Card className="border-0 shadow-md rounded-2xl">
+              <CardHeader>
+                <CardTitle>Settings</CardTitle>
+                <CardDescription>System settings and configuration</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8 text-gray-600">
+                  <p>Settings coming soon...</p>
+                </div>
+              </CardContent>
+            </Card>
+          ) : null
+          }
         </div>
       </div>
 

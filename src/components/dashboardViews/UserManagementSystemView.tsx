@@ -188,25 +188,15 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-2xl font-bold text-gray-900">User Management</h3>
-          <p className="text-sm text-gray-600 mt-1">
-            Manage user accounts - suspend, reactivate or delete users
-          </p>
-        </div>
-        <Button
-          onClick={handleRefresh}
-          disabled={refreshLoading}
-          className="flex items-center gap-2"
-        >
-          <RefreshCw className={`w-4 h-4 ${refreshLoading ? "animate-spin" : ""}`} />
-          Refresh
-        </Button>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
+        <p className="text-gray-600 mt-1">
+          Manage user accounts - suspend, reactivate or delete users
+        </p>
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card className="border-0 shadow-md rounded-2xl">
           <CardContent className="p-6">
             <div className="flex items-center gap-3">

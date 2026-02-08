@@ -94,6 +94,17 @@ const Dashboard = () => {
     navigate("/");
   };
 
+  const handleChangePassword = async (
+    oldPassword: string,
+    newPassword: string,
+    confirmPassword: string
+  ) => {
+    if (newPassword !== confirmPassword) {
+      throw new Error("Passwords do not match");
+    }
+    await changeUserPassword(oldPassword, newPassword);
+  };
+
   // Close user menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

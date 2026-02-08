@@ -197,72 +197,74 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card className="border-0 shadow-md rounded-2xl">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-blue-100 p-3 rounded-xl">
-                <span className="text-2xl font-bold text-blue-600">👨‍⚕️</span>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Total Doctors</p>
-                <p className="text-2xl font-bold text-gray-900">{totalDoctors}</p>
-              </div>
+        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Doctors</p>
+              <p className="text-3xl font-bold text-gray-900 mt-2">{totalDoctors}</p>
             </div>
-          </CardContent>
-        </Card>
+            <div className="bg-blue-100 p-3 rounded-lg">
+              <span className="text-xl">👨‍⚕️</span>
+            </div>
+          </div>
+        </div>
 
-        <Card className="border-0 shadow-md rounded-2xl">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-green-100 p-3 rounded-xl">
-                <span className="text-2xl font-bold text-green-600">👥</span>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Total Customers</p>
-                <p className="text-2xl font-bold text-gray-900">{totalCustomers}</p>
-              </div>
+        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Customers</p>
+              <p className="text-3xl font-bold text-gray-900 mt-2">{totalCustomers}</p>
             </div>
-          </CardContent>
-        </Card>
+            <div className="bg-green-100 p-3 rounded-lg">
+              <span className="text-xl">👥</span>
+            </div>
+          </div>
+        </div>
 
-        <Card className="border-0 shadow-md rounded-2xl">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-orange-100 p-3 rounded-xl">
-                <span className="text-2xl font-bold text-orange-600">👔</span>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Total Staff</p>
-                <p className="text-2xl font-bold text-gray-900">{totalStaff}</p>
-              </div>
+        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Staff</p>
+              <p className="text-3xl font-bold text-gray-900 mt-2">{totalStaff}</p>
             </div>
-          </CardContent>
-        </Card>
+            <div className="bg-orange-100 p-3 rounded-lg">
+              <span className="text-xl">👔</span>
+            </div>
+          </div>
+        </div>
 
-        <Card className="border-0 shadow-md rounded-2xl">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-red-100 p-3 rounded-xl">
-                <span className="text-2xl font-bold text-red-600">⛔</span>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Suspended</p>
-                <p className="text-2xl font-bold text-gray-900">{suspendedCount}</p>
-              </div>
+        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Suspended</p>
+              <p className="text-3xl font-bold text-gray-900 mt-2">{suspendedCount}</p>
             </div>
-          </CardContent>
-        </Card>
+            <div className="bg-red-100 p-3 rounded-lg">
+              <span className="text-xl">⛔</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-        <Input
-          placeholder="Search by name, email, or username..."
-          value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
-          className="pl-10"
-        />
+      {/* Search Bar and Actions */}
+      <div className="flex gap-3 mb-6">
+        <div className="flex-1 relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Input
+            placeholder="Search by name, email, or username..."
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="pl-12 h-11 bg-white border border-gray-300 rounded-lg"
+          />
+        </div>
+        <Button
+          onClick={handleRefresh}
+          disabled={refreshLoading}
+          variant="outline"
+          className="h-11"
+        >
+          <RefreshCw className={`w-4 h-4 ${refreshLoading ? "animate-spin" : ""}`} />
+        </Button>
       </div>
 
       {/* User Directory Table */}

@@ -266,6 +266,32 @@ export async function resetUserPassword(userId: number, password: string): Promi
   }
 }
 
+export async function changeUserPassword(
+  oldPassword: string,
+  newPassword: string
+): Promise<void> {
+  try {
+    const response = await fetch(`${API_URL}/auth/change-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ oldPassword, newPassword }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to change password');
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Failed to change password');
+  }
+}
+
 export async function checkHealth(): Promise<{ status: string }> {
   const response = await fetch(`${API_URL.replace('/api', '')}/api/health`, {
     method: 'GET',

@@ -520,6 +520,10 @@ const AdminDashboard = () => {
             <AdminBookingsView bookings={bookings} users={users} />
           ) : activeNav === "reviews" ? (
             <AdminTestimonialsView testimonials={testimonials} onDataChange={loadData} />
+          ) : activeNav === "coupons" ? (
+            <AdminCouponsView />
+          ) : activeNav === "revenue" ? (
+            <AdminRevenueView bookings={bookings} users={users} testimonials={testimonials} />
           ) : activeNav === "settings" ? (
             <Card className="border-0 shadow-md rounded-2xl">
               <CardHeader>

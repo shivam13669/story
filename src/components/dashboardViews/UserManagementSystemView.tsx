@@ -438,6 +438,14 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
           onSubmit={handleResetPassword}
         />
       )}
+
+      {/* User Details Modal */}
+      <UserDetailsModal
+        isOpen={isDetailsModalOpen}
+        user={selectedUser}
+        onClose={() => setIsDetailsModalOpen(false)}
+        onDataChange={onDataChange}
+      />
     </div>
   );
 }

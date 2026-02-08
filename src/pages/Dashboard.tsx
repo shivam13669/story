@@ -622,29 +622,41 @@ const Dashboard = () => {
                   <CardDescription>Your account details</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-6">
-                    <div>
-                      <p className="text-sm text-gray-600 font-medium">Full Name</p>
-                      <p className="text-lg font-semibold text-gray-900 mt-2">{user?.fullName}</p>
-                      <p className="text-xs text-gray-500 mt-1">You can edit your name below</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Full Name */}
+                    <div className="border-b md:border-b-0 pb-6 md:pb-0">
+                      <p className="text-sm text-gray-600 font-medium mb-2">Full Name</p>
+                      <p className="text-lg font-semibold text-gray-900">{user?.fullName || "—"}</p>
+                      <p className="text-xs text-gray-500 mt-2">You can edit your name</p>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-600 font-medium">Email</p>
-                      <p className="text-lg font-semibold text-gray-900 mt-2">{user?.email}</p>
-                      <p className="text-xs text-gray-500 mt-1">Email cannot be changed after signup</p>
+
+                    {/* Email */}
+                    <div className="border-b md:border-b-0 pb-6 md:pb-0">
+                      <p className="text-sm text-gray-600 font-medium mb-2">Email Address</p>
+                      <p className="text-lg font-semibold text-gray-900">{user?.email || "—"}</p>
+                      <p className="text-xs text-gray-500 mt-2">Cannot be changed after signup</p>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-600 font-medium">Phone</p>
-                      <p className="text-lg font-semibold text-gray-900 mt-2">+{user?.countryCode} {user?.mobileNumber}</p>
-                      <p className="text-xs text-gray-500 mt-1">Phone number cannot be changed after signup</p>
+
+                    {/* Phone */}
+                    <div className="border-b md:border-b-0 pb-6 md:pb-0">
+                      <p className="text-sm text-gray-600 font-medium mb-2">Phone Number</p>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {user?.countryCode && user?.mobileNumber
+                          ? `+${user.countryCode} ${user.mobileNumber}`
+                          : "—"}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-2">Cannot be changed after signup</p>
                     </div>
+
+                    {/* Member Since */}
                     <div>
-                      <p className="text-sm text-gray-600 font-medium">Member Since</p>
-                      <p className="text-lg font-semibold text-gray-900 mt-2">
+                      <p className="text-sm text-gray-600 font-medium mb-2">Member Since</p>
+                      <p className="text-lg font-semibold text-gray-900">
                         {user?.signupDate && !isNaN(new Date(user.signupDate).getTime())
                           ? format(new Date(user.signupDate), "MMMM dd, yyyy")
                           : "—"}
                       </p>
+                      <p className="text-xs text-gray-500 mt-2">Account creation date</p>
                     </div>
                   </div>
                 </CardContent>

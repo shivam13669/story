@@ -333,7 +333,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-center h-96">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
-          ) : (
+          ) : activeNav === "overview" ? (
             <>
               {/* Statistics Cards Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
@@ -535,7 +535,96 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
             </>
-          )}
+          ) : activeNav === "bookings" ? (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">My Bookings</h3>
+                <p className="text-sm text-gray-600 mt-1">View all your trip bookings</p>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {recentBookings.length > 0 ? (
+                  recentBookings.map((booking) => (
+                    <Card key={booking.id} className="border-0 shadow-md rounded-2xl">
+                      <CardHeader>
+                        <CardTitle>{booking.tripName}</CardTitle>
+                        <CardDescription>{format(new Date(booking.tripDate), "MMM dd, yyyy")}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Badge className={getStatusColor(booking.status)}>
+                          {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <Card className="border-0 shadow-md rounded-2xl lg:col-span-2">
+                    <CardContent className="p-8 text-center text-gray-600">
+                      <p>No bookings yet</p>
+                      <Button variant="link" className="mt-2 text-primary" onClick={() => navigate("/destinations")}>Browse destinations →</Button>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </div>
+          ) : activeNav === "reviews" ? (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">My Reviews</h3>
+                <p className="text-sm text-gray-600 mt-1">Share your travel experiences</p>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {recentReviews.length > 0 ? (
+                  recentReviews.map((review) => (
+                    <Card key={review.id} className="border-0 shadow-md rounded-2xl">
+                      <CardHeader>
+                        <CardTitle className="flex items-center justify-between">
+                          {review.tripName}
+                          <Badge variant={review.isVisible ? "default" : "secondary"}>
+                            {review.isVisible ? "Public" : "Hidden"}
+                          </Badge>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-gray-700 mb-2">{review.quote}</p>
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          {review.rating} Stars
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <Card className="border-0 shadow-md rounded-2xl lg:col-span-2">
+                    <CardContent className="p-8 text-center text-gray-600">
+                      <p>No reviews yet</p>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </div>
+          ) : activeNav === "profile" ? (
+            <div>
+              {user && <UserProfileView user={user} />}
+              <ChangePasswordModal
+                isOpen={isPasswordModalOpen}
+                onClose={() => setIsPasswordModalOpen(false)}
+                onSubmit={handleChangePassword}
+              />
+            </div>
+          ) : activeNav === "settings" ? (
+            <Card className="border-0 shadow-md rounded-2xl">
+              <CardHeader>
+                <CardTitle>Settings</CardTitle>
+                <CardDescription>Account settings and preferences</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8 text-gray-600">
+                  <p>Settings coming soon...</p>
+                </div>
+              </CardContent>
+            </Card>
+          ) : null
+          }
         </div>
       </div>
 

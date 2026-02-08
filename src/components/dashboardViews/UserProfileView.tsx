@@ -216,7 +216,7 @@ export function UserProfileView({ user, onUserUpdate, onChangePassword }: UserPr
             <p className="text-sm text-gray-700">
               Your account security is important to us. You can change your password at any time.
             </p>
-            <Button className="w-full">Change Password</Button>
+            <Button onClick={onChangePassword} className="w-full">Change Password</Button>
           </div>
         </CardContent>
       </Card>

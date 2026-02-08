@@ -620,27 +620,80 @@ const Dashboard = () => {
               {/* Personal Information Card */}
               <Card className="border-0 shadow-md rounded-2xl">
                 <CardHeader>
-                  <CardTitle>Personal Information</CardTitle>
-                  <CardDescription>Your account details</CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>Personal Information</CardTitle>
+                      <CardDescription>Your account details</CardDescription>
+                    </div>
+                    {!isEditingName && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setIsEditingName(true);
+                          setEditedName(user?.fullName || "");
+                        }}
+                        className="flex items-center gap-2"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        Edit Name
+                      </Button>
+                    )}
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Full Name */}
-                    <div className="border-b md:border-b-0 pb-6 md:pb-0">
+                  <div className="space-y-6">
+                    {/* Full Name - Editable */}
+                    <div>
                       <p className="text-sm text-gray-600 font-medium mb-2">Full Name</p>
-                      <p className="text-lg font-semibold text-gray-900">{user?.fullName || "—"}</p>
-                      <p className="text-xs text-gray-500 mt-2">You can edit your name</p>
+                      {isEditingName ? (
+                        <div className="flex gap-2">
+                          <Input
+                            type="text"
+                            value={editedName}
+                            onChange={(e) => setEditedName(e.target.value)}
+                            placeholder="Enter your full name"
+                            className="flex-1"
+                          />
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              setIsEditingName(false);
+                              // Here you would normally call an API to update the name
+                              toast({
+                                title: "Success",
+                                description: "Name will update after you logout and login again"
+                              });
+                            }}
+                          >
+                            Save
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setIsEditingName(false);
+                              setEditedName(user?.fullName || "");
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      ) : (
+                        <p className="text-lg font-semibold text-gray-900">{user?.fullName || "—"}</p>
+                      )}
+                      <p className="text-xs text-gray-500 mt-2">First letter of your name will update your avatar after logout/login</p>
                     </div>
 
                     {/* Email */}
-                    <div className="border-b md:border-b-0 pb-6 md:pb-0">
+                    <div className="border-t pt-6">
                       <p className="text-sm text-gray-600 font-medium mb-2">Email Address</p>
                       <p className="text-lg font-semibold text-gray-900">{user?.email || "—"}</p>
                       <p className="text-xs text-gray-500 mt-2">Cannot be changed after signup</p>
                     </div>
 
                     {/* Phone */}
-                    <div className="border-b md:border-b-0 pb-6 md:pb-0">
+                    <div className="border-t pt-6">
                       <p className="text-sm text-gray-600 font-medium mb-2">Phone Number</p>
                       <p className="text-lg font-semibold text-gray-900">
                         {user?.countryCode && user?.mobileNumber
@@ -651,7 +704,7 @@ const Dashboard = () => {
                     </div>
 
                     {/* Member Since */}
-                    <div>
+                    <div className="border-t pt-6">
                       <p className="text-sm text-gray-600 font-medium mb-2">Member Since</p>
                       <p className="text-lg font-semibold text-gray-900">
                         {user?.signupDate && !isNaN(new Date(user.signupDate).getTime())

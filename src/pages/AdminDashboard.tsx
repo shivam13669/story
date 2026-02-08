@@ -35,6 +35,8 @@ import { AdminCouponsView } from "@/components/dashboardViews/AdminCouponsView";
 import { AdminRevenueView } from "@/components/dashboardViews/AdminRevenueView";
 import { AdminTestimonialForm } from "@/components/AdminTestimonialForm";
 import { AdminReportsView } from "@/components/dashboardViews/AdminReportsView";
+import { CustomerManagementView } from "@/components/dashboardViews/CustomerManagementView";
+import { UserManagementSystemView } from "@/components/dashboardViews/UserManagementSystemView";
 
 const AdminDashboard = () => {
   const { user, isAuthenticated, isAdmin, logout, isLoading: authLoading } = useAuth();

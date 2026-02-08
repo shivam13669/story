@@ -20,6 +20,7 @@ interface User {
 interface UserProfileViewProps {
   user: User;
   onUserUpdate?: (updatedUser: User) => void;
+  onChangePassword?: () => void;
 }
 
 export function UserProfileView({ user, onUserUpdate }: UserProfileViewProps) {

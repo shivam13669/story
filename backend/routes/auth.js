@@ -47,6 +47,12 @@ router.post('/signup', async (req, res) => {
       return res.status(409).json({ error: 'Email already registered' });
     }
 
+    // Check if mobile number already exists
+    const mobileResult = db.exec(`SELECT id FROM users WHERE mobileNumber = '${escapeSQL(mobileNumber)}'`);
+    if (mobileResult && mobileResult.length > 0 && mobileResult[0].values.length > 0) {
+      return res.status(409).json({ error: 'Phone number already registered' });
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -358,6 +364,54 @@ router.post('/users/:id/reset-password', async (req, res) => {
     res.json({ message: 'Password reset' });
   } catch (error) {
     console.error('Reset password error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Change user password (user changes their own password)
+router.post('/change-password', async (req, res) => {
+  try {
+    const { userId } = req.headers;
+    const { oldPassword, newPassword } = req.body;
+    const db = getDB();
+
+    // For browser-based auth, we need userId from request
+    // This endpoint should be called by authenticated users
+    if (!userId) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ error: 'Old password and new password required' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'New password must be at least 6 characters' });
+    }
+
+    const userResult = db.exec(`SELECT password FROM users WHERE id = ${parseInt(userId)}`);
+    if (!userResult || userResult.length === 0 || userResult[0].values.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const hashedPassword = userResult[0].values[0][0];
+    const isValidPassword = await bcrypt.compare(oldPassword, hashedPassword);
+
+    if (!isValidPassword) {
+      return res.status(401).json({ error: 'Old password is incorrect' });
+    }
+
+    if (oldPassword === newPassword) {
+      return res.status(400).json({ error: 'New password must be different from old password' });
+    }
+
+    const newHashedPassword = await bcrypt.hash(newPassword, 10);
+    db.run(`UPDATE users SET password = '${escapeSQL(newHashedPassword)}' WHERE id = ${parseInt(userId)}`);
+    saveDatabase();
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Change password error:', error);
     res.status(500).json({ error: error.message });
   }
 });

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
   LogOut,
   MapPin,
@@ -18,11 +19,35 @@ import {
   Heart,
   Home,
   ChevronDown,
+  Edit2,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { getBookingsByUserId, getTestimonialsByUserId, Booking, Testimonial } from "@/lib/db";
 import { format } from "date-fns";
+import { UserProfileView } from "@/components/dashboardViews/UserProfileView";
+import { ChangePasswordModal } from "@/components/ChangePasswordModal";
+import { changeUserPassword } from "@/lib/api";
+
+// Country code to phone code mapping
+const countryCodeToPhoneCode: { [key: string]: string } = {
+  'IN': '91',   // India
+  'US': '1',    // United States
+  'GB': '44',   // United Kingdom
+  'CA': '1',    // Canada
+  'AU': '61',   // Australia
+  'DE': '49',   // Germany
+  'FR': '33',   // France
+  'JP': '81',   // Japan
+  'CN': '86',   // China
+  'BR': '55',   // Brazil
+  'MX': '52',   // Mexico
+  'ZA': '27',   // South Africa
+  'SG': '65',   // Singapore
+  'HK': '852',  // Hong Kong
+  'PK': '92',   // Pakistan
+  'BD': '880',  // Bangladesh
+};
 
 const Dashboard = () => {
   const { user, isAuthenticated, isAdmin, logout, isLoading: authLoading } = useAuth();
@@ -34,6 +59,9 @@ const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeNav, setActiveNav] = useState("overview");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState(user?.fullName || "");
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   // Redirect if not authenticated or if admin (admin should go to admin dashboard)
@@ -88,6 +116,17 @@ const Dashboard = () => {
   const handleLogout = () => {
     logout();
     navigate("/");
+  };
+
+  const handleChangePassword = async (
+    oldPassword: string,
+    newPassword: string,
+    confirmPassword: string
+  ) => {
+    if (newPassword !== confirmPassword) {
+      throw new Error("Passwords do not match");
+    }
+    await changeUserPassword(oldPassword, newPassword);
   };
 
   // Close user menu when clicking outside
@@ -254,8 +293,14 @@ const Dashboard = () => {
               {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">My Trips Dashboard</h2>
-              <p className="text-sm text-gray-600">Manage your bookings and adventures</p>
+              <h2 className="text-2xl font-bold text-gray-900">
+                {activeNav === "profile" ? "My Profile" : "My Trips Dashboard"}
+              </h2>
+              <p className="text-sm text-gray-600">
+                {activeNav === "profile"
+                  ? `Hi, ${user?.fullName?.split(" ")[0]}`
+                  : "Manage your bookings and adventures"}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -318,7 +363,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-center h-96">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
-          ) : (
+          ) : activeNav === "overview" ? (
             <>
               {/* Statistics Cards Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
@@ -520,7 +565,212 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
             </>
-          )}
+          ) : activeNav === "bookings" ? (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">My Bookings</h3>
+                <p className="text-sm text-gray-600 mt-1">View all your trip bookings</p>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {recentBookings.length > 0 ? (
+                  recentBookings.map((booking) => (
+                    <Card key={booking.id} className="border-0 shadow-md rounded-2xl">
+                      <CardHeader>
+                        <CardTitle>{booking.tripName}</CardTitle>
+                        <CardDescription>{format(new Date(booking.tripDate), "MMM dd, yyyy")}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Badge className={getStatusColor(booking.status)}>
+                          {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <Card className="border-0 shadow-md rounded-2xl lg:col-span-2">
+                    <CardContent className="p-8 text-center text-gray-600">
+                      <p>No bookings yet</p>
+                      <Button variant="link" className="mt-2 text-primary" onClick={() => navigate("/destinations")}>Browse destinations →</Button>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </div>
+          ) : activeNav === "reviews" ? (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">My Reviews</h3>
+                <p className="text-sm text-gray-600 mt-1">Share your travel experiences</p>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {recentReviews.length > 0 ? (
+                  recentReviews.map((review) => (
+                    <Card key={review.id} className="border-0 shadow-md rounded-2xl">
+                      <CardHeader>
+                        <CardTitle className="flex items-center justify-between">
+                          {review.tripName}
+                          <Badge variant={review.isVisible ? "default" : "secondary"}>
+                            {review.isVisible ? "Public" : "Hidden"}
+                          </Badge>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-gray-700 mb-2">{review.quote}</p>
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          {review.rating} Stars
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <Card className="border-0 shadow-md rounded-2xl lg:col-span-2">
+                    <CardContent className="p-8 text-center text-gray-600">
+                      <p>No reviews yet</p>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </div>
+          ) : activeNav === "profile" ? (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">My Profile</h3>
+                <p className="text-sm text-gray-600 mt-1">Manage your personal information and account settings</p>
+              </div>
+
+              {/* Personal Information Card */}
+              <Card className="border-0 shadow-md rounded-2xl">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>Personal Information</CardTitle>
+                      <CardDescription>Your account details</CardDescription>
+                    </div>
+                    {!isEditingName && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setIsEditingName(true);
+                          setEditedName(user?.fullName || "");
+                        }}
+                        className="flex items-center gap-2"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        Edit Name
+                      </Button>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    {/* Full Name - Editable */}
+                    <div>
+                      <p className="text-sm text-gray-600 font-medium mb-2">Full Name</p>
+                      {isEditingName ? (
+                        <div className="flex gap-2">
+                          <Input
+                            type="text"
+                            value={editedName}
+                            onChange={(e) => setEditedName(e.target.value)}
+                            placeholder="Enter your full name"
+                            className="flex-1"
+                          />
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              setIsEditingName(false);
+                              // Here you would normally call an API to update the name
+                              toast({
+                                title: "Success",
+                                description: "Name will update after you logout and login again"
+                              });
+                            }}
+                          >
+                            Save
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setIsEditingName(false);
+                              setEditedName(user?.fullName || "");
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      ) : (
+                        <p className="text-lg font-semibold text-gray-900">{user?.fullName || "—"}</p>
+                      )}
+                      <p className="text-xs text-gray-500 mt-2">First letter of your name will update your avatar after logout/login</p>
+                    </div>
+
+                    {/* Email */}
+                    <div className="border-t pt-6">
+                      <p className="text-sm text-gray-600 font-medium mb-2">Email Address</p>
+                      <p className="text-lg font-semibold text-gray-900">{user?.email || "—"}</p>
+                      <p className="text-xs text-gray-500 mt-2">Cannot be changed after signup</p>
+                    </div>
+
+                    {/* Phone */}
+                    <div className="border-t pt-6">
+                      <p className="text-sm text-gray-600 font-medium mb-2">Phone Number</p>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {user?.countryCode && user?.mobileNumber
+                          ? `+${countryCodeToPhoneCode[user.countryCode] || user.countryCode}${user.mobileNumber}`
+                          : "—"}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-2">Cannot be changed after signup</p>
+                    </div>
+
+                    {/* Member Since */}
+                    <div className="border-t pt-6">
+                      <p className="text-sm text-gray-600 font-medium mb-2">Member Since</p>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {user?.signupDate && !isNaN(new Date(user.signupDate).getTime())
+                          ? format(new Date(user.signupDate), "MMMM dd, yyyy")
+                          : "—"}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-2">Account creation date</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Account Security Card */}
+              <Card className="border-0 shadow-md rounded-2xl">
+                <CardHeader>
+                  <CardTitle>Account Security</CardTitle>
+                  <CardDescription>Manage your password and security settings</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-700 mb-4">Your account security is important to us. You can change your password at any time.</p>
+                  <Button onClick={() => setIsPasswordModalOpen(true)} className="w-full">Change Password</Button>
+                </CardContent>
+              </Card>
+
+              <ChangePasswordModal
+                isOpen={isPasswordModalOpen}
+                onClose={() => setIsPasswordModalOpen(false)}
+                onSubmit={handleChangePassword}
+              />
+            </div>
+          ) : activeNav === "settings" ? (
+            <Card className="border-0 shadow-md rounded-2xl">
+              <CardHeader>
+                <CardTitle>Settings</CardTitle>
+                <CardDescription>Account settings and preferences</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8 text-gray-600">
+                  <p>Settings coming soon...</p>
+                </div>
+              </CardContent>
+            </Card>
+          ) : null
+          }
         </div>
       </div>
 

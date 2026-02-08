@@ -5,6 +5,9 @@ export interface AuthUser {
   id: number;
   fullName: string;
   email: string;
+  countryCode: string;
+  mobileNumber: string;
+  signupDate: string;
   role: 'user' | 'admin';
   testimonialAllowed: boolean;
 }
@@ -43,6 +46,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 id: dbUser.id,
                 fullName: dbUser.fullName,
                 email: dbUser.email,
+                countryCode: dbUser.countryCode,
+                mobileNumber: dbUser.mobileNumber,
+                signupDate: dbUser.signupDate,
                 role: dbUser.role,
                 testimonialAllowed: dbUser.testimonialAllowed,
               });
@@ -71,6 +77,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: apiUser.id,
         fullName: apiUser.fullName,
         email: apiUser.email,
+        countryCode: apiUser.countryCode,
+        mobileNumber: apiUser.mobileNumber,
+        signupDate: apiUser.signupDate,
         role: apiUser.role,
         testimonialAllowed: apiUser.testimonialAllowed,
       };
@@ -101,6 +110,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             id: dbUser.id,
             fullName: dbUser.fullName,
             email: dbUser.email,
+            countryCode: dbUser.countryCode,
+            mobileNumber: dbUser.mobileNumber,
+            signupDate: dbUser.signupDate,
             role: dbUser.role,
             testimonialAllowed: dbUser.testimonialAllowed,
           };

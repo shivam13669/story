@@ -21,12 +21,21 @@ import {
   RefreshCw,
   Home,
   ChevronDown,
+  LineChart,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { getAllUsers as getAllUsersFromAPI } from "@/lib/api";
 import { getAllBookings, getAllTestimonials, User, Booking, Testimonial } from "@/lib/db";
 import { format } from "date-fns";
+import { AdminUsersView } from "@/components/dashboardViews/AdminUsersView";
+import { AdminBookingsView } from "@/components/dashboardViews/AdminBookingsView";
+import { AdminTestimonialsView } from "@/components/dashboardViews/AdminTestimonialsView";
+import { AdminCouponsView } from "@/components/dashboardViews/AdminCouponsView";
+import { AdminTestimonialForm } from "@/components/AdminTestimonialForm";
+import { AdminReportsView } from "@/components/dashboardViews/AdminReportsView";
+import { CustomerManagementView } from "@/components/dashboardViews/CustomerManagementView";
+import { UserManagementSystemView } from "@/components/dashboardViews/UserManagementSystemView";
 
 const AdminDashboard = () => {
   const { user, isAuthenticated, isAdmin, logout, isLoading: authLoading } = useAuth();
@@ -210,9 +219,12 @@ const AdminDashboard = () => {
         <nav className="flex-1 overflow-y-auto p-4 space-y-2">
           {[
             { id: "overview", label: "Overview", icon: BarChart3 },
-            { id: "users", label: "Travelers", icon: Users },
+            { id: "reports", label: "Reports & Analytics", icon: LineChart },
+            { id: "customers", label: "Customers", icon: Users },
+            { id: "users", label: "User Management", icon: Users },
             { id: "bookings", label: "Bookings", icon: Briefcase },
             { id: "reviews", label: "Testimonials", icon: FileText },
+            { id: "coupons", label: "Coupons", icon: Briefcase },
             { id: "settings", label: "Settings", icon: Settings },
           ].map((item) => {
             const Icon = item.icon;
@@ -322,7 +334,7 @@ const AdminDashboard = () => {
             <div className="flex items-center justify-center h-96">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
-          ) : (
+          ) : activeNav === "overview" ? (
             <>
               {/* Statistics Cards Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
@@ -506,7 +518,32 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
             </>
-          )}
+          ) : activeNav === "reports" ? (
+            <AdminReportsView bookings={bookings} users={users} testimonials={testimonials} />
+          ) : activeNav === "customers" ? (
+            <CustomerManagementView users={users} onDataChange={loadData} />
+          ) : activeNav === "users" ? (
+            <UserManagementSystemView users={users} onDataChange={loadData} />
+          ) : activeNav === "bookings" ? (
+            <AdminBookingsView bookings={bookings} users={users} />
+          ) : activeNav === "reviews" ? (
+            <AdminTestimonialsView testimonials={testimonials} onDataChange={loadData} />
+          ) : activeNav === "coupons" ? (
+            <AdminCouponsView />
+          ) : activeNav === "settings" ? (
+            <Card className="border-0 shadow-md rounded-2xl">
+              <CardHeader>
+                <CardTitle>Settings</CardTitle>
+                <CardDescription>System settings and configuration</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8 text-gray-600">
+                  <p>Settings coming soon...</p>
+                </div>
+              </CardContent>
+            </Card>
+          ) : null
+          }
         </div>
       </div>
 

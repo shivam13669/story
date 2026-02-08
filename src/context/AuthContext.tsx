@@ -77,6 +77,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: apiUser.id,
         fullName: apiUser.fullName,
         email: apiUser.email,
+        countryCode: apiUser.countryCode,
+        mobileNumber: apiUser.mobileNumber,
+        signupDate: apiUser.signupDate,
         role: apiUser.role,
         testimonialAllowed: apiUser.testimonialAllowed,
       };

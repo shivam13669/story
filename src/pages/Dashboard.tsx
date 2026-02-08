@@ -603,13 +603,26 @@ const Dashboard = () => {
               </div>
             </div>
           ) : activeNav === "profile" ? (
-            <div>
-              {user && <UserProfileView user={user} onChangePassword={() => setIsPasswordModalOpen(true)} />}
-              <ChangePasswordModal
-                isOpen={isPasswordModalOpen}
-                onClose={() => setIsPasswordModalOpen(false)}
-                onSubmit={handleChangePassword}
-              />
+            <div className="space-y-6">
+              {user ? (
+                <>
+                  <UserProfileView
+                    user={user}
+                    onChangePassword={() => setIsPasswordModalOpen(true)}
+                  />
+                  <ChangePasswordModal
+                    isOpen={isPasswordModalOpen}
+                    onClose={() => setIsPasswordModalOpen(false)}
+                    onSubmit={handleChangePassword}
+                  />
+                </>
+              ) : (
+                <Card className="border-0 shadow-md rounded-2xl">
+                  <CardContent className="p-8 text-center">
+                    <p className="text-gray-600">Loading profile...</p>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           ) : activeNav === "settings" ? (
             <Card className="border-0 shadow-md rounded-2xl">

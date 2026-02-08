@@ -522,8 +522,10 @@ const AdminDashboard = () => {
             </>
           ) : activeNav === "reports" ? (
             <AdminReportsView bookings={bookings} users={users} testimonials={testimonials} />
+          ) : activeNav === "customers" ? (
+            <CustomerManagementView users={users} onDataChange={loadData} />
           ) : activeNav === "users" ? (
-            <AdminUsersView users={users} onDataChange={loadData} />
+            <UserManagementSystemView users={users} onDataChange={loadData} />
           ) : activeNav === "bookings" ? (
             <AdminBookingsView bookings={bookings} users={users} />
           ) : activeNav === "reviews" ? (

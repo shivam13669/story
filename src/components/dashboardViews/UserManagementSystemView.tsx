@@ -83,6 +83,15 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
     setIsDetailsModalOpen(true);
   };
 
+  // Update filteredUsers when users list changes
+  useEffect(() => {
+    if (searchQuery) {
+      handleSearch(searchQuery);
+    } else {
+      setFilteredUsers(users.filter(u => u.role !== "admin"));
+    }
+  }, [users]);
+
   const handleRefresh = async () => {
     setRefreshLoading(true);
     try {

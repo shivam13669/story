@@ -41,6 +41,15 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
     setFilteredUsers(filtered);
   };
 
+  // Update filteredUsers when users list changes
+  useEffect(() => {
+    if (searchQuery) {
+      handleSearch(searchQuery);
+    } else {
+      setFilteredUsers(customersOnly);
+    }
+  }, [users]);
+
   // Calculate metrics
   const totalCustomers = customersOnly.length;
   const maleCustomers = Math.round(customersOnly.length * 0.45); // Mock data

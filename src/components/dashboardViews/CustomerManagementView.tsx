@@ -248,7 +248,7 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-gray-600">
-                      Joined: {format(new Date(user.signupDate), "MMM dd, yyyy")}
+                      Joined: {format(new Date(user.signupDate), "dd-MM-yyyy")}
                     </p>
                     <Button
                       variant="ghost"

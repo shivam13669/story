@@ -501,7 +501,7 @@ const AdminDashboard = () => {
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 text-center">
                     <div className="p-4 border border-gray-200 rounded-lg">
-                      <div className="text-3xl font-bold text-blue-600">{users.length}</div>
+                      <div className="text-3xl font-bold text-blue-600">{users.filter(u => u.role !== "admin").length}</div>
                       <div className="text-sm text-gray-600 mt-1">Total Customers</div>
                     </div>
                     <div className="p-4 border border-gray-200 rounded-lg">

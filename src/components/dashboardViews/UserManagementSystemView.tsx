@@ -190,10 +190,10 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
       ["Name", "Email", "Phone", "Role", "Status", "Joined Date"],
       ...filteredUsers.map((user) => {
         const date = new Date(user.signupDate);
-        const day = date.getDate();
-        const month = date.toLocaleString('en-US', { month: 'short' });
         const year = date.getFullYear();
-        const formattedDate = `'${day}-${month}-${year}`; // Apostrophe for Excel text format
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`; // ISO format: 2026-02-09
 
         return [
           user.fullName,
@@ -205,13 +205,7 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
         ];
       }),
     ]
-      .map((row) => row.map((cell, idx) => {
-        // Don't quote the date column (last column, index 5) because it starts with apostrophe
-        if (idx === 5 && cell.startsWith("'")) {
-          return cell;
-        }
-        return `"${cell}"`;
-      }).join(","))
+      .map((row) => row.map((cell) => `"${cell}"`).join(","))
       .join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });

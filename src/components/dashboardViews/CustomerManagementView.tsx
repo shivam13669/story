@@ -221,7 +221,7 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
                           📧 {user.email}
                         </span>
                         <span className="flex items-center gap-1">
-                          📱 +{user.countryCode} {user.mobileNumber}
+                          📱 +{getNumericCountryCode(user.countryCode)} {user.mobileNumber}
                         </span>
                       </div>
                     </div>

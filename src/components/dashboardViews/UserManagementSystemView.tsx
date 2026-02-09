@@ -56,7 +56,7 @@ interface UserManagementSystemViewProps {
 export function UserManagementSystemView({ users, onDataChange }: UserManagementSystemViewProps) {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState(users);
+  const [filteredUsers, setFilteredUsers] = useState(users.filter(u => u.role !== "admin"));
   const [loading, setLoading] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
   const [suspendConfirmId, setSuspendConfirmId] = useState<number | null>(null);
@@ -67,12 +67,14 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    const filtered = users.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(query.toLowerCase()) ||
-        user.email.toLowerCase().includes(query.toLowerCase()) ||
-        user.mobileNumber.includes(query)
-    );
+    const filtered = users
+      .filter(u => u.role !== "admin") // Exclude admins
+      .filter(
+        (user) =>
+          user.fullName.toLowerCase().includes(query.toLowerCase()) ||
+          user.email.toLowerCase().includes(query.toLowerCase()) ||
+          user.mobileNumber.includes(query)
+      );
     setFilteredUsers(filtered);
   };
 

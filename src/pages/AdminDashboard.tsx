@@ -570,6 +570,71 @@ const AdminDashboard = () => {
                 </p>
               </div>
 
+              {/* Metrics Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <Card className="border-0 shadow-md rounded-2xl">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-blue-100 p-3 rounded-xl">
+                        <span className="text-2xl font-bold text-blue-600">👥</span>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Total Admins</p>
+                        <p className="text-2xl font-bold text-gray-900">{users.filter(u => u.role === "admin").length}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-md rounded-2xl">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-green-100 p-3 rounded-xl">
+                        <span className="text-2xl font-bold text-green-600">✅</span>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Active Admins</p>
+                        <p className="text-2xl font-bold text-gray-900">{users.filter(u => u.role === "admin" && !u.isSuspended).length}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-md rounded-2xl">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-orange-100 p-3 rounded-xl">
+                        <span className="text-2xl font-bold text-orange-600">⛔</span>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Suspended</p>
+                        <p className="text-2xl font-bold text-gray-900">{users.filter(u => u.role === "admin" && u.isSuspended).length}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Search and Filter */}
+              <Card className="border border-gray-200 shadow-lg rounded-2xl bg-white">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 relative">
+                      <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                      <Input
+                        placeholder="Search by name, email, phone..."
+                        className="pl-10"
+                        onChange={(e) => {}}
+                      />
+                    </div>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <Filter className="w-4 h-4" />
+                      Filter
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Admin Users List */}
               <Card className="border-0 shadow-md rounded-2xl overflow-hidden">
                 <CardHeader>

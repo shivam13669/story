@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Eye, Download, Filter, Search } from "lucide-react";
+import { Eye, Download, Filter, Search, Mail, Phone } from "lucide-react";
 import { format } from "date-fns";
 
 interface User {
@@ -44,8 +44,13 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
   ).length;
 
   const getInitials = (name: string) => {
-    return name
-      .split(" ")
+    const parts = name.split(" ");
+    if (parts.length === 1) {
+      // Single name: take first 2 letters
+      return name.substring(0, 2).toUpperCase();
+    }
+    // Multiple names: take first letter of each
+    return parts
       .map((n) => n[0])
       .join("")
       .toUpperCase();
@@ -65,13 +70,29 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
     return colors[id % colors.length];
   };
 
+  const getNumericCountryCode = (code: string) => {
+    const countryCodeMap: { [key: string]: string } = {
+      "IN": "91",
+      "US": "1",
+      "UK": "44",
+      "CA": "1",
+      "AU": "61",
+      "DE": "49",
+      "FR": "33",
+      "JP": "81",
+      "CN": "86",
+      "BR": "55",
+    };
+    return countryCodeMap[code] || code;
+  };
+
   const handleExportList = () => {
     const csvContent = [
       ["Name", "Email", "Phone", "Joined Date"],
       ...filteredUsers.map((user) => [
         user.fullName,
         user.email,
-        `+${user.countryCode} ${user.mobileNumber}`,
+        `+${getNumericCountryCode(user.countryCode)} ${user.mobileNumber}`,
         format(new Date(user.signupDate), "MMM dd, yyyy"),
       ]),
     ]
@@ -162,21 +183,25 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
       </div>
 
       {/* Search and Filter */}
-      <div className="flex items-center gap-3">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-          <Input
-            placeholder="Search by name, email, phone, or blood group..."
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <Button variant="outline" className="flex items-center gap-2">
-          <Filter className="w-4 h-4" />
-          Filter
-        </Button>
-      </div>
+      <Card className="border border-gray-200 shadow-lg rounded-2xl bg-white">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-3">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+              <Input
+                placeholder="Search by name, email, phone, or blood group..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Filter className="w-4 h-4" />
+              Filter
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Customers List */}
       <Card className="border-0 shadow-md rounded-2xl">
@@ -194,7 +219,7 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
                 >
                   <div className="flex items-center gap-4 flex-1">
                     <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm ${getAvatarColor(user.id)}`}
+                      className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm uppercase ${getAvatarColor(user.id)}`}
                     >
                       {getInitials(user.fullName)}
                     </div>
@@ -202,10 +227,10 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
                       <h4 className="font-semibold text-gray-900">{user.fullName}</h4>
                       <div className="flex items-center gap-3 text-sm text-gray-600 mt-1">
                         <span className="flex items-center gap-1">
-                          📧 {user.email}
+                          <Mail className="w-4 h-4" /> {user.email}
                         </span>
                         <span className="flex items-center gap-1">
-                          📱 +{user.countryCode} {user.mobileNumber}
+                          <Phone className="w-4 h-4" /> +{getNumericCountryCode(user.countryCode)} {user.mobileNumber}
                         </span>
                       </div>
                     </div>

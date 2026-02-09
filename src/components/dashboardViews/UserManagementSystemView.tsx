@@ -1,16 +1,8 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { UserDetailsModal } from "@/components/UserDetailsModal";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,6 +29,10 @@ import {
   Trash2,
   RefreshCw,
   Eye,
+  Download,
+  Filter,
+  Mail,
+  Phone,
 } from "lucide-react";
 import { format } from "date-fns";
 import { suspendUser, unsuspendUser, deleteUser, resetUserPassword } from "@/lib/api";
@@ -147,8 +143,13 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
   };
 
   const getInitials = (name: string) => {
-    return name
-      .split(" ")
+    const parts = name.split(" ");
+    if (parts.length === 1) {
+      // Single name: take first 2 letters
+      return name.substring(0, 2).toUpperCase();
+    }
+    // Multiple names: take first letter of each
+    return parts
       .map((n) => n[0])
       .join("")
       .toUpperCase();
@@ -168,205 +169,194 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
     return colors[id % colors.length];
   };
 
-  const getRoleBadgeStyle = (role: string) => {
-    if (role === "admin") return "bg-purple-100 text-purple-800";
-    if (role === "user") return "bg-blue-100 text-blue-800";
-    return "bg-gray-100 text-gray-800";
+  const getNumericCountryCode = (code: string) => {
+    const countryCodeMap: { [key: string]: string } = {
+      "IN": "91",
+      "US": "1",
+      "UK": "44",
+      "CA": "1",
+      "AU": "61",
+      "DE": "49",
+      "FR": "33",
+      "JP": "81",
+      "CN": "86",
+      "BR": "55",
+    };
+    return countryCodeMap[code] || code;
   };
 
-  const getStatusColor = (isSuspended: boolean) => {
-    return isSuspended ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800";
-  };
+  const handleExportList = () => {
+    const csvContent = [
+      ["Name", "Email", "Phone", "Joined Date"],
+      ...filteredUsers.map((user) => [
+        user.fullName,
+        user.email,
+        `+${getNumericCountryCode(user.countryCode)} ${user.mobileNumber}`,
+        format(new Date(user.signupDate), "MMM dd, yyyy"),
+      ]),
+    ]
+      .map((row) => row.join(","))
+      .join("\n");
 
-  // Calculate metrics
-  const totalDoctors = users.filter((u) => u.role === "admin").length; // Treating admin as doctors
-  const totalCustomers = users.filter((u) => u.role === "user").length;
-  const totalStaff = 0; // Can be expanded
-  const suspendedCount = users.filter((u) => u.isSuspended).length;
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `users_${format(new Date(), "yyyy-MM-dd")}.csv`;
+    a.click();
+  };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-        <p className="text-gray-600 mt-1">
-          Manage user accounts - suspend, reactivate or delete users
-        </p>
-      </div>
-
-      {/* Metrics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Doctors</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{totalDoctors}</p>
-            </div>
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <span className="text-xl">👨‍⚕️</span>
-            </div>
-          </div>
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-2xl font-bold text-gray-900">User Management</h3>
+          <p className="text-sm text-gray-600 mt-1">
+            Manage and view all registered users in your system
+          </p>
         </div>
-
-        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Customers</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{totalCustomers}</p>
-            </div>
-            <div className="bg-green-100 p-3 rounded-lg">
-              <span className="text-xl">👥</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Staff</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{totalStaff}</p>
-            </div>
-            <div className="bg-orange-100 p-3 rounded-lg">
-              <span className="text-xl">👔</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Suspended</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{suspendedCount}</p>
-            </div>
-            <div className="bg-red-100 p-3 rounded-lg">
-              <span className="text-xl">⛔</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Search Bar and Actions */}
-      <div className="flex gap-3 mb-6">
-        <div className="flex-1 relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <Input
-            placeholder="Search by name, email, or username..."
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="pl-12 h-11 bg-white border border-gray-300 rounded-lg"
-          />
-        </div>
-        <Button
-          onClick={handleRefresh}
-          disabled={refreshLoading}
-          variant="outline"
-          className="h-11"
-        >
-          <RefreshCw className={`w-4 h-4 ${refreshLoading ? "animate-spin" : ""}`} />
+        <Button onClick={handleExportList} className="flex items-center gap-2">
+          <Download className="w-4 h-4" />
+          Export List
         </Button>
       </div>
 
-      {/* User Directory Table */}
-      <div className="bg-white border border-gray-200 rounded-xl">
-        <div className="p-6 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">User Directory</h3>
-          <p className="text-sm text-gray-600 mt-1">Search and filter users, manage their account status</p>
-        </div>
-        <div className="p-6 overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>User</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Joined</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUsers.length > 0 ? (
-                  filteredUsers.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div
-                            className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ${getAvatarColor(user.id)}`}
-                          >
-                            {getInitials(user.fullName)}
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-900">{user.fullName}</p>
-                            <p className="text-xs text-gray-600">{user.email}</p>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getRoleBadgeStyle(user.role)}>
-                          {user.role === "admin" ? "Hospital" : "Customer"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(user.isSuspended)}>
-                          {user.isSuspended ? "Suspended" : "Active"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {format(new Date(user.signupDate), "MM/dd/yyyy hh:mm a")}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-48">
-                            <DropdownMenuItem
-                              onClick={() => handleViewDetails(user)}
-                              className="flex items-center gap-2"
-                            >
-                              <Eye className="w-4 h-4" />
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => setSuspendConfirmId(user.id)}
-                              className="flex items-center gap-2"
-                            >
-                              {user.isSuspended ? (
-                                <>
-                                  <PowerOff className="w-4 h-4" />
-                                  Reactivate
-                                </>
-                              ) : (
-                                <>
-                                  <Power className="w-4 h-4" />
-                                  Suspend User
-                                </>
-                              )}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => setDeleteConfirmId(user.id)}
-                              className="flex items-center gap-2 text-red-600"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                              Delete User
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-gray-600">
-                      No users found matching your search
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-        </div>
+      {/* Metrics Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="border-0 shadow-md rounded-2xl">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-blue-100 p-3 rounded-xl">
+                <span className="text-2xl font-bold text-blue-600">👥</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Total Users</p>
+                <p className="text-2xl font-bold text-gray-900">{users.length}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-md rounded-2xl">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-green-100 p-3 rounded-xl">
+                <span className="text-2xl font-bold text-green-600">✅</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Active Users</p>
+                <p className="text-2xl font-bold text-gray-900">{users.filter(u => !u.isSuspended).length}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-md rounded-2xl">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-pink-100 p-3 rounded-xl">
+                <span className="text-2xl font-bold text-pink-600">👨</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Admins</p>
+                <p className="text-2xl font-bold text-gray-900">{users.filter(u => u.role === "admin").length}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-md rounded-2xl">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-orange-100 p-3 rounded-xl">
+                <span className="text-2xl font-bold text-orange-600">⛔</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Suspended</p>
+                <p className="text-2xl font-bold text-gray-900">{users.filter(u => u.isSuspended).length}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
+
+      {/* Search and Filter */}
+      <Card className="border border-gray-200 shadow-lg rounded-2xl bg-white">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-3">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+              <Input
+                placeholder="Search by name, email, phone..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Filter className="w-4 h-4" />
+              Filter
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Users List */}
+      <Card className="border-0 shadow-md rounded-2xl">
+        <CardHeader>
+          <CardTitle>Users List</CardTitle>
+          <CardDescription>Complete list of registered users</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {filteredUsers.length > 0 ? (
+              filteredUsers.map((user) => (
+                <div
+                  key={user.id}
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center gap-4 flex-1">
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm uppercase ${getAvatarColor(user.id)}`}
+                    >
+                      {getInitials(user.fullName)}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900">{user.fullName}</h4>
+                      <div className="flex items-center gap-3 text-sm text-gray-600 mt-1">
+                        <span className="flex items-center gap-1">
+                          <Mail className="w-4 h-4" /> {user.email}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Phone className="w-4 h-4" /> +{getNumericCountryCode(user.countryCode)} {user.mobileNumber}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-600">
+                      Joined: {format(new Date(user.signupDate), "MMM dd, yyyy")}
+                    </p>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="mt-2"
+                      onClick={() => handleViewDetails(user)}
+                    >
+                      <Eye className="w-4 h-4 text-gray-600" />
+                    </Button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-12 text-gray-600">
+                <p>No users found matching your search</p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Delete Confirmation */}
       <AlertDialog open={deleteConfirmId !== null} onOpenChange={() => setDeleteConfirmId(null)}>

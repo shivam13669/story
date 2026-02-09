@@ -279,107 +279,101 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
         </Button>
       </div>
 
-      {/* User Directory Table */}
-      <div className="bg-white border border-gray-200 rounded-xl">
+      {/* User Directory Cards */}
+      <Card className="border-0 shadow-md rounded-2xl">
         <div className="p-6 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">User Directory</h3>
           <p className="text-sm text-gray-600 mt-1">Search and filter users, manage their account status</p>
         </div>
-        <div className="p-6 overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>User</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Joined</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUsers.length > 0 ? (
-                  filteredUsers.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div
-                            className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ${getAvatarColor(user.id)}`}
+        <div className="p-6">
+          <div className="space-y-3">
+            {filteredUsers.length > 0 ? (
+              filteredUsers.map((user) => (
+                <div
+                  key={user.id}
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center gap-4 flex-1">
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm ${getAvatarColor(user.id)}`}
+                    >
+                      {getInitials(user.fullName)}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900">{user.fullName}</h4>
+                      <div className="flex items-center gap-3 text-sm text-gray-600 mt-1">
+                        <span className="flex items-center gap-1">
+                          📧 {user.email}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          📱 +{user.countryCode} {user.mobileNumber}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-600">
+                      Joined: {format(new Date(user.signupDate), "MMM d, yyyy")}
+                    </p>
+                    <div className="flex items-center gap-2 mt-2 justify-end">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleViewDetails(user)}
+                      >
+                        <Eye className="w-4 h-4 text-gray-600" />
+                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreVertical className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuItem
+                            onClick={() => handleViewDetails(user)}
+                            className="flex items-center gap-2"
                           >
-                            {getInitials(user.fullName)}
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-900">{user.fullName}</p>
-                            <p className="text-xs text-gray-600">{user.email}</p>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getRoleBadgeStyle(user.role)}>
-                          {user.role === "admin" ? "Admin" : "Customer"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(user.isSuspended)}>
-                          {user.isSuspended ? "Suspended" : "Active"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {format(new Date(user.signupDate), "MM/dd/yyyy hh:mm a")}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-48">
-                            <DropdownMenuItem
-                              onClick={() => handleViewDetails(user)}
-                              className="flex items-center gap-2"
-                            >
-                              <Eye className="w-4 h-4" />
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => setSuspendConfirmId(user.id)}
-                              className="flex items-center gap-2"
-                            >
-                              {user.isSuspended ? (
-                                <>
-                                  <PowerOff className="w-4 h-4" />
-                                  Reactivate
-                                </>
-                              ) : (
-                                <>
-                                  <Power className="w-4 h-4" />
-                                  Suspend User
-                                </>
-                              )}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => setDeleteConfirmId(user.id)}
-                              className="flex items-center gap-2 text-red-600"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                              Delete User
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-gray-600">
-                      No users found matching your search
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                            <Eye className="w-4 h-4" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => setSuspendConfirmId(user.id)}
+                            className="flex items-center gap-2"
+                          >
+                            {user.isSuspended ? (
+                              <>
+                                <PowerOff className="w-4 h-4" />
+                                Reactivate
+                              </>
+                            ) : (
+                              <>
+                                <Power className="w-4 h-4" />
+                                Suspend User
+                              </>
+                            )}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => setDeleteConfirmId(user.id)}
+                            className="flex items-center gap-2 text-red-600"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            Delete User
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-12 text-gray-600">
+                <p>No users found matching your search</p>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </Card>
 
       {/* Delete Confirmation */}
       <AlertDialog open={deleteConfirmId !== null} onOpenChange={() => setDeleteConfirmId(null)}>

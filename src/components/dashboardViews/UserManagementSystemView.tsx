@@ -201,7 +201,7 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
           `+${getNumericCountryCode(user.countryCode)} ${user.mobileNumber}`,
           user.role === "admin" ? "Admin" : "Customer",
           user.isSuspended ? "Suspended" : "Active",
-          formattedDate,
+          `'${formattedDate}`, // Apostrophe forces Excel to treat as text
         ];
       }),
     ]

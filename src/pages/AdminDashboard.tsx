@@ -385,7 +385,9 @@ const AdminDashboard = () => {
                               <p className="text-sm font-medium text-gray-900">{u.fullName}</p>
                               <p className="text-xs text-gray-500">{u.email}</p>
                             </div>
-                            <Badge variant="secondary">User</Badge>
+                            <Badge variant={u.role === "admin" ? "default" : "secondary"}>
+                              {u.role === "admin" ? "Admin" : "User"}
+                            </Badge>
                           </div>
                         ))
                       ) : (

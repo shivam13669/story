@@ -179,10 +179,12 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
   };
 
   // Calculate metrics
-  const totalDoctors = users.filter((u) => u.role === "admin").length; // Treating admin as doctors
-  const totalCustomers = users.filter((u) => u.role === "user").length;
-  const totalStaff = 0; // Can be expanded
-  const suspendedCount = users.filter((u) => u.isSuspended).length;
+  const totalDoctors = users.filter((u) => u.role === "admin").length;
+  const maleDoctors = Math.round(totalDoctors * 0.45); // Mock data
+  const femaleDoctors = Math.round(totalDoctors * 0.55); // Mock data
+  const thisMonth = users.filter(
+    (u) => u.role === "admin" && new Date(u.signupDate).getMonth() === new Date().getMonth()
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -195,54 +197,62 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Doctors</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{totalDoctors}</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="border-0 shadow-md rounded-2xl">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-blue-100 p-3 rounded-xl">
+                <span className="text-2xl font-bold text-blue-600">👨‍⚕️</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Total Doctors</p>
+                <p className="text-2xl font-bold text-gray-900">{totalDoctors}</p>
+              </div>
             </div>
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <span className="text-xl">👨‍⚕️</span>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Customers</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{totalCustomers}</p>
+        <Card className="border-0 shadow-md rounded-2xl">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-green-100 p-3 rounded-xl">
+                <span className="text-2xl font-bold text-green-600">👨</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Male Doctors</p>
+                <p className="text-2xl font-bold text-gray-900">{maleDoctors}</p>
+              </div>
             </div>
-            <div className="bg-green-100 p-3 rounded-lg">
-              <span className="text-xl">👥</span>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Staff</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{totalStaff}</p>
+        <Card className="border-0 shadow-md rounded-2xl">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-pink-100 p-3 rounded-xl">
+                <span className="text-2xl font-bold text-pink-600">👩</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Female Doctors</p>
+                <p className="text-2xl font-bold text-gray-900">{femaleDoctors}</p>
+              </div>
             </div>
-            <div className="bg-orange-100 p-3 rounded-lg">
-              <span className="text-xl">👔</span>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Suspended</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{suspendedCount}</p>
+        <Card className="border-0 shadow-md rounded-2xl">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-orange-100 p-3 rounded-xl">
+                <span className="text-2xl font-bold text-orange-600">📅</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">This Month</p>
+                <p className="text-2xl font-bold text-gray-900">{thisMonth}</p>
+              </div>
             </div>
-            <div className="bg-red-100 p-3 rounded-lg">
-              <span className="text-xl">⛔</span>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Search Bar and Actions */}

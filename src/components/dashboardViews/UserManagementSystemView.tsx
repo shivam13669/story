@@ -309,7 +309,7 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
                 >
                   <div className="flex items-center gap-4 flex-1">
                     <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm ${getAvatarColor(user.id)}`}
+                      className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm uppercase ${getAvatarColor(user.id)}`}
                     >
                       {getInitials(user.fullName)}
                     </div>

@@ -103,7 +103,7 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
           user.fullName,
           user.email,
           `+${getNumericCountryCode(user.countryCode)} ${user.mobileNumber}`,
-          formattedDate,
+          `'${formattedDate}`, // Apostrophe forces Excel to treat as text
         ];
       }),
     ]

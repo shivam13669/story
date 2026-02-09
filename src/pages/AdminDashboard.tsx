@@ -500,7 +500,7 @@ const AdminDashboard = () => {
                       variant="link"
                       size="sm"
                       className="w-full mt-4 text-primary"
-                      onClick={() => navigate("/admin/reviews")}
+                      onClick={() => setActiveNav("reviews")}
                     >
                       View all reviews →
                     </Button>

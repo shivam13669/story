@@ -315,7 +315,7 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
                       </TableCell>
                       <TableCell>
                         <Badge className={getRoleBadgeStyle(user.role)}>
-                          {user.role === "admin" ? "Hospital" : "Customer"}
+                          {user.role === "admin" ? "Admin" : "Customer"}
                         </Badge>
                       </TableCell>
                       <TableCell>

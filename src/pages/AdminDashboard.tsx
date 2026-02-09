@@ -23,6 +23,8 @@ import {
   Home,
   ChevronDown,
   LineChart,
+  Users2,
+  UserCheck,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -534,8 +536,14 @@ const AdminDashboard = () => {
               {/* Tabs Section */}
               <Tabs value={customerTab} onValueChange={setCustomerTab} className="space-y-6">
                 <TabsList className="w-fit h-auto p-1">
-                  <TabsTrigger value="customer" className="px-4 py-2.5">Customer</TabsTrigger>
-                  <TabsTrigger value="users" className="px-4 py-2.5">User Management</TabsTrigger>
+                  <TabsTrigger value="customer" className="px-4 py-2.5 flex items-center gap-2">
+                    <Users2 className="w-4 h-4" />
+                    Customer
+                  </TabsTrigger>
+                  <TabsTrigger value="users" className="px-4 py-2.5 flex items-center gap-2">
+                    <UserCheck className="w-4 h-4" />
+                    User Management
+                  </TabsTrigger>
                 </TabsList>
 
                 {/* CUSTOMER TAB */}

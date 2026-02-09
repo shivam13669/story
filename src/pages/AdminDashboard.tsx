@@ -130,7 +130,7 @@ const AdminDashboard = () => {
   const stats = [
     {
       label: "Total Customers",
-      value: users.length,
+      value: users.filter(u => u.role !== "admin").length,
       icon: Users,
       color: "bg-blue-50",
       iconColor: "text-blue-600",
@@ -178,7 +178,7 @@ const AdminDashboard = () => {
     },
   ];
 
-  const recentUsers = users.slice(-5).reverse();
+  const recentUsers = users.filter(u => u.role !== "admin").slice(-5).reverse();
   const recentBookings = bookings.slice(-5).reverse();
   const recentTestimonials = testimonials.slice(-5).reverse();
 

@@ -39,6 +39,7 @@ interface UserDetailsModalProps {
   user: User | null;
   onClose: () => void;
   onDataChange: () => void;
+  showActions?: boolean; // If false, hides Suspend and Delete buttons
 }
 
 export function UserDetailsModal({
@@ -46,6 +47,7 @@ export function UserDetailsModal({
   user,
   onClose,
   onDataChange,
+  showActions = true,
 }: UserDetailsModalProps) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -251,36 +253,38 @@ export function UserDetailsModal({
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-3 pt-4 border-t">
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 flex-1"
-                onClick={() => setSuspendConfirmId(user.id)}
-                disabled={loading}
-              >
-                {user.isSuspended ? (
-                  <>
-                    <PowerOff className="w-4 h-4" />
-                    Reactivate User
-                  </>
-                ) : (
-                  <>
-                    <Power className="w-4 h-4" />
-                    Suspend User
-                  </>
-                )}
-              </Button>
-              <Button
-                variant="destructive"
-                className="flex items-center gap-2 flex-1"
-                onClick={() => setDeleteConfirmId(user.id)}
-                disabled={loading}
-              >
-                <Trash2 className="w-4 h-4" />
-                Delete User
-              </Button>
-            </div>
+            {/* Action Buttons - Only show if showActions is true */}
+            {showActions && (
+              <div className="flex gap-3 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-2 flex-1"
+                  onClick={() => setSuspendConfirmId(user.id)}
+                  disabled={loading}
+                >
+                  {user.isSuspended ? (
+                    <>
+                      <PowerOff className="w-4 h-4" />
+                      Reactivate User
+                    </>
+                  ) : (
+                    <>
+                      <Power className="w-4 h-4" />
+                      Suspend User
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="destructive"
+                  className="flex items-center gap-2 flex-1"
+                  onClick={() => setDeleteConfirmId(user.id)}
+                  disabled={loading}
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete User
+                </Button>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>

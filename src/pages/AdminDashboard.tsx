@@ -568,140 +568,172 @@ const AdminDashboard = () => {
             <div className="space-y-6">
               {/* Header */}
               <div>
-                <h3 className="text-2xl font-bold text-gray-900">Admin Management</h3>
+                <h3 className="text-2xl font-bold text-gray-900">Admin</h3>
                 <p className="text-sm text-gray-600 mt-1">
                   Manage admin users and permissions
                 </p>
               </div>
 
-              {/* Metrics Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Card className="border-0 shadow-md rounded-2xl">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-blue-100 p-3 rounded-xl">
-                        <span className="text-2xl font-bold text-blue-600">👥</span>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Total Admins</p>
-                        <p className="text-2xl font-bold text-gray-900">{users.filter(u => u.role === "admin").length}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              {/* Tabs Section */}
+              <Tabs value={adminTab} onValueChange={setAdminTab} className="space-y-6">
+                <TabsList className="w-fit h-auto bg-gray-100 p-1 rounded-lg">
+                  <TabsTrigger value="management" className="px-5 py-2.5 flex items-center gap-2 rounded-md bg-transparent text-gray-700 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                    <Users className="w-4 h-4" />
+                    Admin Management
+                  </TabsTrigger>
+                  <TabsTrigger value="create" className="px-5 py-2.5 flex items-center gap-2 rounded-md bg-transparent text-gray-700 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                    <Users2 className="w-4 h-4" />
+                    Create Admin
+                  </TabsTrigger>
+                </TabsList>
 
-                <Card className="border-0 shadow-md rounded-2xl">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-green-100 p-3 rounded-xl">
-                        <span className="text-2xl font-bold text-green-600">✅</span>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Active Admins</p>
-                        <p className="text-2xl font-bold text-gray-900">{users.filter(u => u.role === "admin" && !u.isSuspended).length}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* ADMIN MANAGEMENT TAB */}
+                <TabsContent value="management" className="space-y-6">
+                  {/* Metrics Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <Card className="border-0 shadow-md rounded-2xl">
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-3">
+                          <div className="bg-blue-100 p-3 rounded-xl">
+                            <span className="text-2xl font-bold text-blue-600">👥</span>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-600">Total Admins</p>
+                            <p className="text-2xl font-bold text-gray-900">{users.filter(u => u.role === "admin").length}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
 
-                <Card className="border-0 shadow-md rounded-2xl">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-orange-100 p-3 rounded-xl">
-                        <span className="text-2xl font-bold text-orange-600">⛔</span>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Suspended</p>
-                        <p className="text-2xl font-bold text-gray-900">{users.filter(u => u.role === "admin" && u.isSuspended).length}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+                    <Card className="border-0 shadow-md rounded-2xl">
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-3">
+                          <div className="bg-green-100 p-3 rounded-xl">
+                            <span className="text-2xl font-bold text-green-600">✅</span>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-600">Active Admins</p>
+                            <p className="text-2xl font-bold text-gray-900">{users.filter(u => u.role === "admin" && !u.isSuspended).length}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
 
-              {/* Search and Filter */}
-              <Card className="border border-gray-200 shadow-lg rounded-2xl bg-white">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 relative">
-                      <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-                      <Input
-                        placeholder="Search by name, email, phone..."
-                        className="pl-10"
-                        onChange={(e) => {}}
-                      />
-                    </div>
-                    <Button variant="outline" className="flex items-center gap-2">
-                      <Filter className="w-4 h-4" />
-                      Filter
-                    </Button>
+                    <Card className="border-0 shadow-md rounded-2xl">
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-3">
+                          <div className="bg-orange-100 p-3 rounded-xl">
+                            <span className="text-2xl font-bold text-orange-600">⛔</span>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-600">Suspended</p>
+                            <p className="text-2xl font-bold text-gray-900">{users.filter(u => u.role === "admin" && u.isSuspended).length}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
-                </CardContent>
-              </Card>
 
-              {/* Admin Users List */}
-              <Card className="border-0 shadow-md rounded-2xl overflow-hidden">
-                <CardHeader>
-                  <CardTitle>Admin Users</CardTitle>
-                  <CardDescription>All admin accounts in the system</CardDescription>
-                </CardHeader>
-                <CardContent className="p-0">
-                  {users.filter(u => u.role === "admin").length > 0 ? (
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="border-b border-gray-200 bg-gray-50">
-                            <th className="px-6 py-4 text-left font-semibold text-gray-900">Name</th>
-                            <th className="px-6 py-4 text-left font-semibold text-gray-900">Email</th>
-                            <th className="px-6 py-4 text-left font-semibold text-gray-900">Phone</th>
-                            <th className="px-6 py-4 text-left font-semibold text-gray-900">Status</th>
-                            <th className="px-6 py-4 text-left font-semibold text-gray-900">Joined</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {users.filter(u => u.role === "admin").map((admin) => (
-                            <tr
-                              key={admin.id}
-                              className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
-                            >
-                              <td className="px-6 py-4">
-                                <p className="font-medium text-gray-900">{admin.fullName}</p>
-                              </td>
-                              <td className="px-6 py-4">
-                                <p className="text-sm text-gray-700">{admin.email}</p>
-                              </td>
-                              <td className="px-6 py-4">
-                                <p className="text-sm text-gray-700">+{admin.countryCode} {admin.mobileNumber}</p>
-                              </td>
-                              <td className="px-6 py-4">
-                                <span
-                                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                                    admin.isSuspended
-                                      ? "bg-red-100 text-red-800"
-                                      : "bg-green-100 text-green-800"
-                                  }`}
+                  {/* Search and Filter */}
+                  <Card className="border border-gray-200 shadow-lg rounded-2xl bg-white">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 relative">
+                          <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                          <Input
+                            placeholder="Search by name, email, phone..."
+                            className="pl-10"
+                            onChange={(e) => {}}
+                          />
+                        </div>
+                        <Button variant="outline" className="flex items-center gap-2">
+                          <Filter className="w-4 h-4" />
+                          Filter
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Admin Users List */}
+                  <Card className="border-0 shadow-md rounded-2xl overflow-hidden">
+                    <CardHeader>
+                      <CardTitle>Admin Users</CardTitle>
+                      <CardDescription>All admin accounts in the system</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      {users.filter(u => u.role === "admin").length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b border-gray-200 bg-gray-50">
+                                <th className="px-6 py-4 text-left font-semibold text-gray-900">Name</th>
+                                <th className="px-6 py-4 text-left font-semibold text-gray-900">Email</th>
+                                <th className="px-6 py-4 text-left font-semibold text-gray-900">Phone</th>
+                                <th className="px-6 py-4 text-left font-semibold text-gray-900">Status</th>
+                                <th className="px-6 py-4 text-left font-semibold text-gray-900">Joined</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {users.filter(u => u.role === "admin").map((admin) => (
+                                <tr
+                                  key={admin.id}
+                                  className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
                                 >
-                                  {admin.isSuspended ? "Suspended" : "Active"}
-                                </span>
-                              </td>
-                              <td className="px-6 py-4">
-                                <div className="text-sm text-gray-700">
-                                  <p className="font-medium">{format(new Date(admin.signupDate), "dd/MM/yyyy")}</p>
-                                  <p className="text-xs text-gray-600">{format(new Date(admin.signupDate), "h:mm a")}</p>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : (
-                    <div className="text-center py-12 text-gray-600">
-                      <p>No admin users found</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                                  <td className="px-6 py-4">
+                                    <p className="font-medium text-gray-900">{admin.fullName}</p>
+                                  </td>
+                                  <td className="px-6 py-4">
+                                    <p className="text-sm text-gray-700">{admin.email}</p>
+                                  </td>
+                                  <td className="px-6 py-4">
+                                    <p className="text-sm text-gray-700">+{admin.countryCode} {admin.mobileNumber}</p>
+                                  </td>
+                                  <td className="px-6 py-4">
+                                    <span
+                                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                        admin.isSuspended
+                                          ? "bg-red-100 text-red-800"
+                                          : "bg-green-100 text-green-800"
+                                      }`}
+                                    >
+                                      {admin.isSuspended ? "Suspended" : "Active"}
+                                    </span>
+                                  </td>
+                                  <td className="px-6 py-4">
+                                    <div className="text-sm text-gray-700">
+                                      <p className="font-medium">{format(new Date(admin.signupDate), "dd/MM/yyyy")}</p>
+                                      <p className="text-xs text-gray-600">{format(new Date(admin.signupDate), "h:mm a")}</p>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      ) : (
+                        <div className="text-center py-12 text-gray-600">
+                          <p>No admin users found</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                {/* CREATE ADMIN TAB */}
+                <TabsContent value="create">
+                  <Card className="border-0 shadow-md rounded-2xl">
+                    <CardHeader>
+                      <CardTitle>Create New Admin</CardTitle>
+                      <CardDescription>Add a new admin user to the system</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-center py-12 text-gray-600">
+                        <p>Create admin form coming soon...</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
             </div>
           ) : activeNav === "bookings" ? (
             <AdminBookingsView bookings={bookings} users={users} />

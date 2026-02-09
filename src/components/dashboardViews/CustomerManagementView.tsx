@@ -97,7 +97,7 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${day}-${month}-${year}`; // DD-MM-YYYY format: 09-02-2026
+        const formattedDate = `${day}/${month}/${year}`; // DD/MM/YYYY format: 09/02/2026
 
         return [
           user.fullName,
@@ -248,7 +248,7 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-gray-600">
-                      Joined: {format(new Date(user.signupDate), "dd-MM-yyyy")}
+                      Joined: {format(new Date(user.signupDate), "dd/MM/yyyy")}
                     </p>
                     <Button
                       variant="ghost"

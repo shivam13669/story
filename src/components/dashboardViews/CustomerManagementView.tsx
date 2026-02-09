@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, Download, Filter, Search, Mail, Phone } from "lucide-react";
 import { format } from "date-fns";
+import { UserDetailsModal } from "@/components/UserDetailsModal";
 
 interface User {
   id: number;
@@ -23,6 +24,8 @@ interface CustomerManagementViewProps {
 export function CustomerManagementView({ users, onDataChange }: CustomerManagementViewProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState(users);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -239,7 +242,15 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
                     <p className="text-sm text-gray-600">
                       Joined: {format(new Date(user.signupDate), "MMM dd, yyyy")}
                     </p>
-                    <Button variant="ghost" size="sm" className="mt-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="mt-2"
+                      onClick={() => {
+                        setSelectedUser(user);
+                        setIsModalOpen(true);
+                      }}
+                    >
                       <Eye className="w-4 h-4 text-gray-600" />
                     </Button>
                   </div>
@@ -253,6 +264,18 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
           </div>
         </CardContent>
       </Card>
+
+      {/* User Details Modal - Read-only for Customer view */}
+      <UserDetailsModal
+        isOpen={isModalOpen}
+        user={selectedUser}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedUser(null);
+        }}
+        onDataChange={onDataChange}
+        showActions={false}
+      />
     </div>
   );
 }

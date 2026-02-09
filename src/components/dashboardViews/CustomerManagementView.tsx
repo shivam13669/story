@@ -96,13 +96,13 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
         user.fullName,
         user.email,
         `+${getNumericCountryCode(user.countryCode)} ${user.mobileNumber}`,
-        format(new Date(user.signupDate), "MMM dd, yyyy"),
+        format(new Date(user.signupDate), "dd-MMM-yyyy"),
       ]),
     ]
-      .map((row) => row.join(","))
+      .map((row) => row.map((cell) => `"${cell}"`).join(","))
       .join("\n");
 
-    const blob = new Blob([csvContent], { type: "text/csv" });
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

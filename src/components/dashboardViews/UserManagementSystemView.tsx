@@ -379,7 +379,7 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
                       {/* Joined Column */}
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-700">
-                          <p className="font-medium">{format(new Date(user.signupDate), "M/d/yyyy")}</p>
+                          <p className="font-medium">{format(new Date(user.signupDate), "dd-MM-yyyy")}</p>
                           <p className="text-xs text-gray-600">{format(new Date(user.signupDate), "h:mm a")}</p>
                         </div>
                       </td>

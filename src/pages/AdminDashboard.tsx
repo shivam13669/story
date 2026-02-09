@@ -535,12 +535,12 @@ const AdminDashboard = () => {
 
               {/* Tabs Section */}
               <Tabs value={customerTab} onValueChange={setCustomerTab} className="space-y-6">
-                <TabsList className="w-fit h-auto bg-transparent p-0 gap-2">
-                  <TabsTrigger value="customer" className="px-5 py-3 flex items-center gap-2 rounded-lg bg-gray-100 text-gray-700 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                <TabsList className="w-fit h-auto bg-gray-100 p-1 rounded-lg">
+                  <TabsTrigger value="customer" className="px-5 py-2.5 flex items-center gap-2 rounded-md bg-transparent text-gray-700 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                     <Users2 className="w-4 h-4" />
                     Customer
                   </TabsTrigger>
-                  <TabsTrigger value="users" className="px-5 py-3 flex items-center gap-2 rounded-lg bg-gray-100 text-gray-700 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                  <TabsTrigger value="users" className="px-5 py-2.5 flex items-center gap-2 rounded-md bg-transparent text-gray-700 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                     <UserCheck className="w-4 h-4" />
                     User Management
                   </TabsTrigger>

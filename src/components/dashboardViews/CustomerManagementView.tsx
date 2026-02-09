@@ -97,7 +97,7 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
         const day = date.getDate();
         const month = date.toLocaleString('en-US', { month: 'short' });
         const year = date.getFullYear();
-        const formattedDate = `${day}-${month}-${year}`;
+        const formattedDate = `'${day}-${month}-${year}`; // Apostrophe for Excel text format
 
         return [
           user.fullName,
@@ -107,7 +107,13 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
         ];
       }),
     ]
-      .map((row) => row.map((cell) => `"${cell}"`).join(","))
+      .map((row) => row.map((cell, idx) => {
+        // Don't quote the date column (last column, index 3) because it starts with apostrophe
+        if (idx === 3 && cell.startsWith("'")) {
+          return cell;
+        }
+        return `"${cell}"`;
+      }).join(","))
       .join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });

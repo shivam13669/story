@@ -302,59 +302,128 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
         </CardContent>
       </Card>
 
-      {/* Users List */}
-      <Card className="border-0 shadow-md rounded-2xl">
+      {/* Users List - Table Format */}
+      <Card className="border-0 shadow-md rounded-2xl overflow-hidden">
         <CardHeader>
           <CardTitle>Users List</CardTitle>
           <CardDescription>Complete list of registered users</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map((user) => (
-                <div
-                  key={user.id}
-                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-center gap-4 flex-1">
-                    <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm uppercase ${getAvatarColor(user.id)}`}
+        <CardContent className="p-0">
+          {filteredUsers.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-200 bg-gray-50">
+                    <th className="px-6 py-4 text-left font-semibold text-gray-900">User</th>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-900">Role</th>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-900">Status</th>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-900">Joined</th>
+                    <th className="px-6 py-4 text-right font-semibold text-gray-900">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredUsers.map((user) => (
+                    <tr
+                      key={user.id}
+                      className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
                     >
-                      {getInitials(user.fullName)}
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900">{user.fullName}</h4>
-                      <div className="flex items-center gap-3 text-sm text-gray-600 mt-1">
-                        <span className="flex items-center gap-1">
-                          <Mail className="w-4 h-4" /> {user.email}
+                      {/* User Column */}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm uppercase ${getAvatarColor(user.id)}`}
+                          >
+                            {getInitials(user.fullName)}
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-900">{user.fullName}</p>
+                            <p className="text-xs text-gray-600">{user.email}</p>
+                            <p className="text-xs text-gray-600">+{getNumericCountryCode(user.countryCode)} {user.mobileNumber}</p>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Role Column */}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1 text-gray-700">
+                          <span>👤</span>
+                          <span className="text-sm font-medium">
+                            {user.role === "admin" ? "Admin" : "Customer"}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Status Column */}
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                            user.isSuspended
+                              ? "bg-red-100 text-red-800"
+                              : "bg-green-100 text-green-800"
+                          }`}
+                        >
+                          {user.isSuspended ? "Suspended" : "Active"}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Phone className="w-4 h-4" /> +{getNumericCountryCode(user.countryCode)} {user.mobileNumber}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm text-gray-600">
-                      Joined: {format(new Date(user.signupDate), "MMM dd, yyyy")}
-                    </p>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="mt-2"
-                      onClick={() => handleViewDetails(user)}
-                    >
-                      <Eye className="w-4 h-4 text-gray-600" />
-                    </Button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-12 text-gray-600">
-                <p>No users found matching your search</p>
-              </div>
-            )}
-          </div>
+                      </td>
+
+                      {/* Joined Column */}
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-700">
+                          <p className="font-medium">{format(new Date(user.signupDate), "M/d/yyyy")}</p>
+                          <p className="text-xs text-gray-600">{format(new Date(user.signupDate), "h:mm a")}</p>
+                        </div>
+                      </td>
+
+                      {/* Actions Column */}
+                      <td className="px-6 py-4 text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                              <MoreVertical className="w-4 h-4 text-gray-600" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleViewDetails(user)}>
+                              <Eye className="w-4 h-4 mr-2" />
+                              View Details
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setResetPasswordUser(user)}>
+                              <Lock className="w-4 h-4 mr-2" />
+                              Reset Password
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setSuspendConfirmId(user.id)}>
+                              {user.isSuspended ? (
+                                <>
+                                  <PowerOff className="w-4 h-4 mr-2" />
+                                  Reactivate User
+                                </>
+                              ) : (
+                                <>
+                                  <Power className="w-4 h-4 mr-2" />
+                                  Suspend User
+                                </>
+                              )}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => setDeleteConfirmId(user.id)}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Delete User
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-12 text-gray-600">
+              <p>No users found matching your search</p>
+            </div>
+          )}
         </CardContent>
       </Card>
 

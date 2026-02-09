@@ -533,7 +533,7 @@ const AdminDashboard = () => {
 
               {/* Tabs Section */}
               <Tabs value={customerTab} onValueChange={setCustomerTab} className="space-y-6">
-                <TabsList className="grid w-auto grid-cols-2">
+                <TabsList className="w-fit">
                   <TabsTrigger value="customer">Customer</TabsTrigger>
                   <TabsTrigger value="users">User Management</TabsTrigger>
                 </TabsList>

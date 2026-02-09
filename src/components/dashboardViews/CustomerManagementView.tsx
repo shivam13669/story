@@ -97,7 +97,7 @@ export function CustomerManagementView({ users, onDataChange }: CustomerManageme
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${year}-${month}-${day}`; // ISO format: 2026-02-09
+        const formattedDate = `${day}-${month}-${year}`; // DD-MM-YYYY format: 09-02-2026
 
         return [
           user.fullName,

@@ -314,7 +314,7 @@ export function UserManagementSystemView({ users, onDataChange }: UserManagement
                           📧 {user.email}
                         </span>
                         <span className="flex items-center gap-1">
-                          📱 +{user.countryCode} {user.mobileNumber}
+                          📱 +{getNumericCountryCode(user.countryCode)} {user.mobileNumber}
                         </span>
                       </div>
                     </div>

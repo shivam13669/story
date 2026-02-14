@@ -9,12 +9,12 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         {/* Main Footer */}
         <div className="py-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Brand */}
-            <div className="min-w-0">
+            <div className="lg:col-span-1">
               <div className="flex items-center space-x-2 mb-6">
-                <img src="https://cdn.builder.io/api/v1/image/assets%2Fde743b16560c4ea5a4a46e65a2543876%2F4be0568d99d2469baa7ef6c274a8a1b2?format=webp&width=800" alt="StoriesByFoot logo" className="h-10 sm:h-12 w-auto" />
-                <span className="text-xl sm:text-2xl font-bold text-white truncate">StoriesBy<span className="text-secondary">Foot</span></span>
+                <img src="https://cdn.builder.io/api/v1/image/assets%2Fde743b16560c4ea5a4a46e65a2543876%2F4be0568d99d2469baa7ef6c274a8a1b2?format=webp&width=800" alt="StoriesByFoot logo" className="h-12 w-auto" />
+                <span className="text-2xl font-bold text-white">StoriesBy<span className="text-secondary">Foot</span></span>
               </div>
               <p className="text-white/80 mb-6 leading-relaxed">
                 Your gateway to extraordinary adventures. We create unforgettable experiences that connect you with nature and push your boundaries.
@@ -93,39 +93,39 @@ const Footer = () => {
             </div>
 
             {/* Contact */}
-            <div className="lg:col-span-1">
+            <div>
               <h3 className="text-lg font-semibold mb-6">Get In Touch</h3>
-              <div className="text-white/80 flex flex-wrap gap-y-3">
-                <div className="flex items-center mr-4">
+              <div className="text-white/80">
+                <span className="inline-flex items-center mr-4">
                   <PhoneIcon className="h-5 w-5 text-adventure-gold flex-shrink-0 mr-2" />
-                  <a href="tel:+916205129118" className="hover:underline text-sm" aria-label="Call +916205129118">+916205129118</a>
-                </div>
+                  <a href="tel:+916205129118" className="hover:underline" aria-label="Call +916205129118">+916205129118</a>
+                </span>
 
-                <div className="flex items-center mr-4">
+                <span className="inline-flex items-center mr-4">
                   <PhoneIcon className="h-5 w-5 text-adventure-gold flex-shrink-0 mr-2" />
-                  <a href="tel:+916283620764" className="hover:underline text-sm" aria-label="Call +916283620764">+916283620764</a>
-                </div>
+                  <a href="tel:+916283620764" className="hover:underline" aria-label="Call +916283620764">+916283620764</a>
+                </span>
 
-                <div className="flex items-center mr-4">
+                <span className="inline-flex items-center mr-4">
                   <MailIcon className="h-5 w-5 text-adventure-gold flex-shrink-0 mr-2" />
-                  <a href="mailto:contact@storiesbyfoot.com" className="hover:underline text-sm" aria-label="Email contact@storiesbyfoot.com">contact@storiesbyfoot.com</a>
-                </div>
+                  <a href="mailto:contact@storiesbyfoot.com" className="hover:underline" aria-label="Email contact@storiesbyfoot.com">contact@storiesbyfoot.com</a>
+                </span>
 
-                <div className="flex items-center">
+                <span className="inline-flex items-center">
                   <MailIcon className="h-5 w-5 text-adventure-gold flex-shrink-0 mr-2" />
-                  <a href="mailto:storiesbyfoot@gmail.com" className="hover:underline text-sm" aria-label="Email storiesbyfoot@gmail.com">storiesbyfoot@gmail.com</a>
-                </div>
+                  <a href="mailto:storiesbyfoot@gmail.com" className="hover:underline" aria-label="Email storiesbyfoot@gmail.com">storiesbyfoot@gmail.com</a>
+                </span>
               </div>
 
               <div className="mt-6">
                 <h4 className="font-semibold mb-3">Subscribe to Newsletter</h4>
-                <div className="flex max-w-xs">
+                <div className="flex">
                   <input
                     type="email"
                     placeholder="Your email"
-                    className="min-w-0 flex-1 px-3 py-2 rounded-l-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-adventure-gold text-sm"
+                    className="flex-1 px-4 py-2 rounded-l-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-adventure-gold"
                   />
-                  <Button variant="secondary" className="rounded-l-none text-sm px-4">
+                  <Button variant="secondary" className="rounded-l-none">
                     Subscribe
                   </Button>
                 </div>

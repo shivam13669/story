@@ -53,9 +53,9 @@ const Navigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center lg:space-x-6 xl:space-x-8">
             {navItems.map((item) => {
-              const classes = "text-white/90 hover:text-white transition-colors font-medium relative group";
+              const classes = "text-white/90 hover:text-white transition-colors font-medium relative group text-sm lg:text-base";
 
               if (item.type === "route") {
                 return (
@@ -76,7 +76,7 @@ const Navigation = () => {
           </div>
 
           {/* Currency + Auth */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             <CurrencyPicker value={currency} onChange={setCurrencyWithRegion} />
             {isAuthenticated && user ? (
               <div className="relative" ref={userMenuRef}>
@@ -132,7 +132,7 @@ const Navigation = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <Button
               variant="ghost"
               size="icon"
@@ -146,7 +146,7 @@ const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-slate-900/95 border border-white/10 backdrop-blur-lg rounded-lg mt-2 shadow-lg">
               {navItems.map((item) => {
                 const classes = "block px-3 py-2 text-base font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-md transition-colors";
